@@ -1,0 +1,54 @@
+//网页最基础的操作，前进与返回
+#include <stdio.h>
+#include <iostream>
+#include <string>
+#include <stack>
+#include <algorithm>
+using namespace std;
+int main()
+{
+    int t;
+    scanf("%d",&t);
+    for(int i=1;i<=t;i++)
+    {
+        stack<string>str1,str2;
+        string str="http://www.lightoj.com/",require;
+        printf("Case %d:\n",i);
+        while(cin>>require&&require!="QUIT")
+        {
+            if(require=="BACK")
+            {
+                if(str2.empty())
+                    printf("Ignored\n");
+                else
+                {
+                    str1.push(str);
+                    str=str2.top();
+                    str2.pop();
+                    cout<<str<<endl;
+                }
+            }
+            else if(require=="FORWARD")
+            {
+                if(str1.empty())
+                    printf("Ignored\n");
+                else
+                {
+                    str2.push(str);
+                    str=str1.top();
+                    str1.pop();
+                    cout<<str<<endl;
+                }
+            }
+            else
+            {
+                str2.push(str);
+                cin>>str;
+                cout<<str<<endl;
+                while(str1.size())
+                    str1.pop();
+            }
+        }
+    }
+    return 0;
+}

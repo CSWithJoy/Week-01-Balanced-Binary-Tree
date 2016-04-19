@@ -1,0 +1,119 @@
+//I a b   把a到b区间的二进制位去反，转化成a到b区间的数全部加1
+//Q a     判断第a位的奇偶
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <queue>
+#include <cmath>
+#include <algorithm>
+using namespace std;
+
+const int imax_n = 100005;
+
+struct node
+{
+    int l,r;
+    int add;
+    int t;
+}f[imax_n*3];
+
+string s;
+
+void build(int t,int l,int r)
+{
+    f[t].l=l;
+    f[t].r=r;
+    f[t].add=0;
+    if (l==r)
+    {
+        f[t].t=s[l-1]-'0';
+        return ;
+    }
+    int mid=(l+r)/2;
+    build(2*t,l,mid);
+    build(2*t+1,mid+1,r);
+    f[t].t=f[2*t].t+f[2*t+1].t;
+}
+
+void update(int t,int l,int r,int c)
+{
+    if (f[t].l==l && f[t].r==r)
+    {
+        f[t].add+=c;
+        return ;
+    }
+    f[t].t+=(r-l+1)*c;
+    int mid=(f[t].l+f[t].r)/2;
+    if (r<=mid) update(2*t,l,r,c);
+    else
+    {
+        if (l>mid) update(2*t+1,l,r,c);
+        else
+        {
+            update(2*t,l,mid,c);
+            update(2*t+1,mid+1,r,c);
+        }
+    }
+}
+
+int query(int t,int l,int r)
+{
+    if (f[t].l==l && f[t].r==r)
+    {
+        return f[t].t+f[t].add*(r-l+1);
+    }
+    int mid=(f[t].l+f[t].r)/2;
+    f[t].t+=(r-l+1)*f[t].add;
+    f[2*t].add+=f[t].add;
+    f[2*t+1].add+=f[t].add;
+    f[t].add=0;
+    if (r<=mid) return query(2*t,l,r);
+    else
+    {
+        if (l>mid) return query(2*t+1,l,r);
+        else
+        {
+            return query(2*t,l,mid)+query(2*t+1,mid+1,r);
+        }
+    }
+}
+
+char sq[5];
+int Q;
+int x,y;
+
+void slove()
+{
+    int len=s.length();
+    build(1,1,len);
+    scanf("%d",&Q);
+    while (Q--)
+    {
+        scanf("%s",sq);
+        if (sq[0]=='I')
+        {
+            scanf("%d%d",&x,&y);
+            update(1,x,y,1);
+        }
+        else
+        {
+            scanf("%d",&x);
+            int ans=query(1,x,x);
+            printf("%d\n",ans%2);
+        }
+    }
+}
+
+int main()
+{
+    int T;
+    scanf("%d",&T);
+    int t=0;
+    while (T--)
+    {
+        cin>>s;
+        printf("Case %d:\n",++t);
+        slove();
+    }
+    return 0;
+}

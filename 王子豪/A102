@@ -1,0 +1,68 @@
+//定量队列的插入与删除，并告知队首和队尾的名称
+#include <stdio.h>
+#include <algorithm>
+#include <iostream>
+#include <cmath>
+#include <deque>
+using namespace std;
+string str;
+int num;
+int main()
+{
+    int t;
+    scanf("%d",&t);
+    for(int i=1;i<=t;i++)
+    {
+        printf("Case %d:\n",i);
+        int m,n;
+        scanf("%d%d",&n,&m);
+        deque<int>que;
+        while(m--)
+        {
+            cin>>str;
+            if(str=="pushLeft")
+            {
+                cin>>num;
+                if(que.size()!=n)
+                {
+                    que.push_back(num);
+                    cout<<"Pushed in left: "<<num<<endl;
+                }
+                else
+                    cout<<"The queue is full"<<endl;
+            }
+            else if(str=="pushRight")
+            {
+                cin>>num;
+                if(que.size()!=n)
+                {
+                    que.push_front(num);
+                    cout<<"Pushed in right: "<<num<<endl;
+                }
+                else
+                    cout<<"The queue is full"<<endl;
+            }
+            else if(str=="popRight")
+            {
+                if(que.empty())
+                    cout<<"The queue is empty"<<endl;
+                else
+                {
+                    cout<<"Popped from right: "<<que.front()<<endl;
+                    que.pop_front();
+                }
+            }
+            else
+            {
+                if(que.empty())
+                    cout<<"The queue is empty"<<endl;
+                else
+                {
+                    cout<<"Popped from left: "<<que.back()<<endl;
+                    que.pop_back();
+                }
+            }
+        }
+    }
+    return 0;
+}

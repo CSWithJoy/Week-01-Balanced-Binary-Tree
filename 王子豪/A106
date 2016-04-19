@@ -1,0 +1,102 @@
+//1 i   表示查询i处的值，并把 i 处的值变为0
+//2 i v 表示将 i 处 值增加 v
+//3 x y 查询 区间[x, y]的值
+//线段树成段单点更新
+#include<cstdio>
+#include<cstring>
+#include<cstdlib>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+#define lson l,mid,v<<1
+#define rson mid+1,r,v<<1|1
+typedef long long int LL;
+const int MAX=100000;
+int sum[4*MAX+20];
+int num[MAX+5];
+
+void build (int l,int r,int v)
+{
+	sum[v]=0;
+	if(l==r)
+	{
+	  sum[v]=num[l];
+	  return ;	
+	}
+	int mid=(l+r)>>1;
+	build(lson);
+	build(rson);
+	sum[v]=sum[2*v]+sum[2*v+1] ;
+}
+
+void update(int l,int r,int v,int pos,int x)
+{
+	if(l==r)
+	{
+		sum[v]+=x;
+		return ;
+	}
+	int mid=(l+r)>>1;
+	if(pos<=mid)
+	update(lson,pos,x);
+	else
+	update(rson,pos,x);
+	sum[v]=sum[2*v]+sum[2*v+1] ;
+}
+
+int query(int l,int r,int v,int lpos,int rpos)
+{
+   if(lpos<=l&&r<=rpos)
+    return sum[v];	
+   int mid=(l+r)>>1;
+   if(rpos<=mid)
+   return query(lson,lpos,rpos);
+   else if(lpos>mid)
+   return query(rson,lpos,rpos);
+   else 
+   return query(lson,lpos,mid)+query(rson,mid+1,rpos);
+} 
+
+int main()  
+{  
+  int T,ca=1;  
+  scanf("%d",&T);  
+  while(T--)  
+  {  
+   int n,m;
+   scanf("%d%d",&n,&m);  
+   memset(num,0,sizeof(num));
+   for(int i=1;i<=n;i++)     
+    scanf("%d",&num[i]);  
+   build(1,n,1);
+   
+   printf("Case %d:\n",ca++);
+   while(m--)
+   {
+   	int opr;
+   	int a=0,b=0,c=0;
+    scanf("%d",&opr);
+      if(opr==1)
+      {
+   	    scanf("%d",&a);
+   	    a++;
+   	    printf("%d\n",query(1,n,1,a,a));
+	    update(1,n,1,a,-query(1,n,1,a,a));
+      }
+      if(opr==2)
+      {
+	 scanf("%d%d",&a,&b);
+	 a++;
+	 update(1,n,1,a,b);
+	 
+      }
+      if(opr==3)
+      {
+	 scanf("%d%d",&a,&b);
+	 a++;b++;
+	 printf("%d\n",query(1,n,1,a,b));
+     }	
+   }
+  }   
+return 0;  
+}

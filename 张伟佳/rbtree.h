@@ -36,6 +36,7 @@ public:
 	RBTNode<E> *Search(E el) { return Search(el, root); };
 	RBTNode<E> *Insert(E el);
 	void Remove(E& el);
+	/* 警告：该中序遍历的实现只能应用于E的类型是pair<A, B>的时候 */
 	void Travelsal(RBTNode<E> *p=NULL) {
 		if (p==NULL) p=root;
 		if (p->left!=nil) {
@@ -77,8 +78,8 @@ RBTNode<E> *RBTree<E>::Insert(E el) {
 	z->left=nil;
 	z->right=nil;
 	RBInsertFixup(z);
-	cout<<"Travelsal:"<<endl;
-	Travelsal();
+	//cout<<"Travelsal:"<<endl;
+	//Travelsal();
 	return z;
 };
 
